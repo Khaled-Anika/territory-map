@@ -1,7 +1,9 @@
 import './App.css';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useMemo } from 'react';
 import List from "list.js";
+import Table from "./Table";
+
 import {
   Dropdown,
   DropdownItem,
@@ -11,6 +13,23 @@ import {
 
 
 mapboxgl.accessToken = 'pk.eyJ1IjoiYW5pa2FraGFsZWQiLCJhIjoiY2xiMGx6a2htMThoeTNxcHU0bmlwYzZhbSJ9.ZO3hYO4CYqJNhkTPQXMXzA';
+const MAPBOX_TOKEN = 'pk.eyJ1IjoiYW5pa2FraGFsZWQiLCJhIjoiY2xiMGx6a2htMThoeTNxcHU0bmlwYzZhbSJ9.ZO3hYO4CYqJNhkTPQXMXzA';
+
+// const TerritoryMap = ({
+
+// }) => {
+//   return (
+//     <Map
+//       {...viewState}
+//       onMove={evt => setViewState(evt.viewState)}
+//       style={{ width: 800, height: 600 }}
+//       mapStyle="mapbox://styles/mapbox/streets-v12"
+//       mapboxAccessToken={MAPBOX_TOKEN}
+//     >
+//       <Marker longitude={-122.4} latitude={37.8} color="red" />
+//     </Map>
+//   );
+// };
 
 function App() {
   const map = useRef(null);
@@ -31,6 +50,27 @@ function App() {
   const [menu, setMenu] = useState(false);
 
   var tempCT = [];
+  const columns = useMemo(
+    () => [
+      {
+        // first group - TV Show
+        Header: "Map Territory",
+        // First group columns
+        columns: [
+          {
+            Header: "Postcode",
+            accessor: "postCode"
+          },
+          {
+            Header: "Territory",
+            accessor: "territory"
+          }
+        ]
+      }
+    ],
+    []
+  );
+
   const codesTerritory = [
     {
       territory: "A",
@@ -236,13 +276,14 @@ function App() {
   }, []);
 
   useEffect(() => {
+    console.log("selected features changed");
     let tempAreas = [];
-    // const cloneCT = JSON.parse(JSON.stringify(codesTerritory));
+    const cloneCT = mainList.map(m => Object.assign({}, m, { checked: false })); //JSON.parse(JSON.stringify(mainList));
 
     // eslint-disable-next-line
     selectedFeatures.map((f) => {
       // eslint-disable-next-line
-      mainList.map((x) => {
+      cloneCT.map((x) => {
         if (!x.checked) {
           let codes = f.properties.Postcodes.split(",");
           // eslint-disable-next-line
@@ -536,7 +577,7 @@ function App() {
           // }
 
           document.getElementById("search").value = "";
-         
+
           // prepareVisualizationTable(features);
         }
 
@@ -717,57 +758,60 @@ function App() {
             }
           }
         });
-        if (matchedCodes == f.properties.Postcodes.split(",").length) {
-          console.log("all codes matched from same feature");
-          console.log("selected territory", selectedTerritory);
-          if (selectedTerritory === "A") {
-            terrAfeatures.push(...aFeatures, f);
-            setAFeatures([...aFeatures, f]);
-            console.log("terr a features", terrAfeatures);
+        console.log("matched codes", matchedCodes);
+        if (matchedCodes > 0) {
+          if (matchedCodes == f.properties.Postcodes.split(",").length) {
+            console.log("all codes matched from same feature");
+            console.log("selected territory", selectedTerritory);
+            if (selectedTerritory === "A") {
+              terrAfeatures.push(...aFeatures, f);
+              setAFeatures([...aFeatures, f]);
+              console.log("terr a features", terrAfeatures);
 
-            const param1 = terrAfeatures.map((feature) => feature.properties.Name);
-            map.current.setFilter('counties-highlighted-A', ['in', 'Name', ...param1]);
-            map.current.setPaintProperty('counties-highlighted-A', 'fill-color', '#DC143C');
+              const param1 = terrAfeatures.map((feature) => feature.properties.Name);
+              map.current.setFilter('counties-highlighted-A', ['in', 'Name', ...param1]);
+              map.current.setPaintProperty('counties-highlighted-A', 'fill-color', '#DC143C');
+            }
+            if (selectedTerritory === "B") {
+              terrBfeatures.push(...bFeatures, f);
+              setBFeatures([...bFeatures, f]);
+
+              const param2 = terrBfeatures.map((feature) => feature.properties.Name);
+              map.current.setFilter('counties-highlighted-B', ['in', 'Name', ...param2]);
+              map.current.setPaintProperty('counties-highlighted-B', 'fill-color', '#6e599f');
+            }
+            if (selectedTerritory === "X") {
+              terrXfeatures.push(...xFeatures, f);
+              setXFeatures([...xFeatures, f]);
+              console.log("terr x features after change", terrXfeatures);
+
+              const param3 = terrXfeatures.map((feature) => feature.properties.Name);
+              map.current.setFilter('counties-highlighted-X', ['in', 'Name', ...param3]);
+              map.current.setPaintProperty('counties-highlighted-X', 'fill-color', '#FFC300');
+            }
+          } else {
+            console.log("all codes DID NOT match from same feature");
+            terrMixedFeatures.push(...mixedFeatures, f);
+            setMixedFeatures([...mixedFeatures, f]);
+
+            const param4 = terrMixedFeatures.map((feature) => feature.properties.Name);
+            map.current.setFilter('counties-highlighted-Mixed', ['in', 'Name', ...param4]);
+            map.current.setPaintProperty('counties-highlighted-Mixed', 'fill-color', '#5F5F5F');
           }
-          if (selectedTerritory === "B") {
-            terrBfeatures.push(...bFeatures, f);
-            setBFeatures([...bFeatures, f]);
-
-            const param2 = terrBfeatures.map((feature) => feature.properties.Name);
-            map.current.setFilter('counties-highlighted-B', ['in', 'Name', ...param2]);
-            map.current.setPaintProperty('counties-highlighted-B', 'fill-color', '#6e599f');
-          }
-          if (selectedTerritory === "X") {
-            terrXfeatures.push(...xFeatures, f);
-            setXFeatures([...xFeatures, f]);
-            console.log("terr x features after change", terrXfeatures);
-
-            const param3 = terrXfeatures.map((feature) => feature.properties.Name);
-            map.current.setFilter('counties-highlighted-X', ['in', 'Name', ...param3]);
-            map.current.setPaintProperty('counties-highlighted-X', 'fill-color', '#FFC300');
-          }
-        } else {
-          console.log("all codes DID NOT match from same feature");
-          terrMixedFeatures.push(...mixedFeatures, f);
-          setMixedFeatures([...mixedFeatures, f]);
-
-          const param4 = terrMixedFeatures.map((feature) => feature.properties.Name);
-          map.current.setFilter('counties-highlighted-Mixed', ['in', 'Name', ...param4]);
-          map.current.setPaintProperty('counties-highlighted-Mixed', 'fill-color', '#5F5F5F');
         }
       };
 
       let tempCT2 = searchedCodesTerritory.map(u => Object.assign({}, u));
-      let cloneCT = JSON.parse(JSON.stringify(codesTerritory));
+      let cloneCT = mainList.map(m => Object.assign({}, m, { checked: false })); //JSON.parse(JSON.stringify(mainList));
       let count = 0;
-      // let tempAreas = [];
+      let tempAreas = [];
       for (let i = 0; i < cloneCT.length; i++) {
         if (count == tempCT2.length) {
           console.log("count equals length");
           // console.log("temp areas after territory change", tempAreas);
-          // setSelectedAreas(tempAreas);
+          setSelectedAreas(tempAreas);
           setMainList(cloneCT);
-          // document.getElementById("search").value = "";
+          document.getElementById("search").value = "";
           return;
         }
         for (let j = 0; j < tempCT2.length; j++) {
@@ -776,18 +820,18 @@ function App() {
             tempCT2[j].checked = true;
             count = count + 1;
             console.log("s checked", count, j);
-            // tempAreas.push({
-            //   postCode: tempCT2[j].postCode,
-            //   territory: selectedTerritory
-            // });
+            tempAreas.push({
+              postCode: tempCT2[j].postCode,
+              territory: selectedTerritory
+            });
             break;
           }
         };
       };
       // console.log("temp areas after territory change", tempAreas);
-      // setSelectedAreas(tempAreas);
+      setSelectedAreas(tempAreas);
       setMainList(cloneCT);
-      // document.getElementById("search").value = "";
+      document.getElementById("search").value = "";
     }
   }
 
@@ -818,6 +862,11 @@ function App() {
     return keys.every(k => equalsCheck(a[k], b[k]));
   };
 
+  const sendData = (data) => {
+    console.log("searched data from react table", data);
+    setSearchedCodesTerritory(data);
+  }
+
   return (
     <div className='container d-flex flex-column'>
       <div id="map"></div>
@@ -843,9 +892,9 @@ function App() {
         </div>}
         <div id="myTable" style={{ width: '50%', marginLeft: '25px' }}>
           <h3>Interaction Table</h3>
-          <div className='d-flex flex-row justify-content-between'>
-            <input id='search' data-search-type="postCode" className="search" placeholder="Search by postCode"
-            />
+          <div className='d-flex flex-row justify-content-end'>
+            {/* <input id='search' data-search-type="postCode" className="search" placeholder="Search by postCode"
+            /> */}
 
             <Dropdown isOpen={menu} toggle={() => setMenu(!menu)} className='d-inline-block'>
               <DropdownToggle caret color="primary">
@@ -866,10 +915,9 @@ function App() {
                 ))}
               </DropdownMenu>
             </Dropdown>
-
           </div>
 
-          <table id='interaction-table' className='table'>
+          {/* <table id='interaction-table' className='table'>
             <thead>
               <tr>
                 <th className='sortable' scope="col">Post Code</th>
@@ -878,10 +926,6 @@ function App() {
               </tr>
             </thead>
             <tbody className="list">
-              {/* <tr>
-                <td>1234</td>
-                <td>test code</td>
-              </tr> */}
               {selectedAreas.map((loc, index) => (
                 <tr key={index}>
                   <td className='postCode'>{loc.postCode}</td>
@@ -895,7 +939,9 @@ function App() {
                 )}
               </tr>
             </tbody>
-          </table>
+          </table> */}
+
+          <Table columns={columns} data={selectedAreas} sendData={sendData}/>
         </div>
       </div>
     </div>

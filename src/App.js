@@ -671,63 +671,6 @@ function App() {
     }
   }, [tempSourceFeatures]);
 
-  useEffect(() => {
-    if (selectedAreas && selectedAreas.length > 0) {
-      var searchInputs = document.querySelectorAll('input');
-      var options = {
-        valueNames: ['postCode', 'territory']
-      };
-      var codeList = new List('myTable', options);
-      console.log("codes list when list initialized", codeList);
-      console.log("selected areas", selectedAreas);
-
-      function search(e) {
-        codeList.search(this.value, e.target.dataset.searchType);
-
-        tempCT = codeList.visibleItems.map((code) => code._values);
-        console.log("codes list", tempCT);
-        setSearchedCodesTerritory(tempCT);
-      }
-
-      searchInputs.forEach(function (input) {
-        document.getElementById("search").addEventListener('input', search)
-      });
-    }
-  }, [selectedAreas]);
-
-  // useEffect(() => {
-  //   if (selectedAreas && selectedAreas.length > 0) {
-  //     // var codeList = new List('myTable', options);
-  //     // codes.update();
-  //     console.log("codes on selectedAreas change", codes);
-  //     codes.reIndex();
-  //   }
-  // }, [selectedAreas]);
-
-  // const searchByPostcode = (e) => {
-  //   if (selectedAreas && selectedAreas.length > 0) {
-  //     var options = {
-  //       valueNames: ['postCode', 'territory']
-  //     };
-  //     // var codeList = new List('myTable', options);
-  //     // setCodeList(codeList);
-  //     console.log("codes list when list initialized", codes);
-  //     console.log("selected areas", selectedAreas);
-
-  //     console.log("target", e.target.value);
-  //     console.log("target dataset", e.target.dataset.searchType);
-  //     if (e.target.value == "") {
-  //       codes.reIndex();
-  //     } else {
-  //       codes.search(e.target.value, e.target.dataset.searchType);
-  //     }
-
-  //     tempCT = codes.visibleItems.map((code) => code._values);
-  //     console.log("codes list", tempCT);
-  //     setSearchedCodesTerritory(tempCT);
-  //   }
-  // };
-
   const changeTerritory = (selectedTerritory) => {
     setSelectedTerritory(selectedTerritory);
     console.log('searched codes', searchedCodesTerritory);

@@ -576,7 +576,7 @@ function App() {
           //   codes.reIndex();
           // }
 
-          document.getElementById("search").value = "";
+          // document.getElementById("search").value = "";
 
           // prepareVisualizationTable(features);
         }
@@ -811,7 +811,7 @@ function App() {
           // console.log("temp areas after territory change", tempAreas);
           setSelectedAreas(tempAreas);
           setMainList(cloneCT);
-          document.getElementById("search").value = "";
+          // document.getElementById("search").value = "";
           return;
         }
         for (let j = 0; j < tempCT2.length; j++) {
@@ -831,7 +831,7 @@ function App() {
       // console.log("temp areas after territory change", tempAreas);
       setSelectedAreas(tempAreas);
       setMainList(cloneCT);
-      document.getElementById("search").value = "";
+      // document.getElementById("search").value = "";
     }
   }
 

@@ -858,6 +858,15 @@ function App() {
   return (
     <div className='container d-flex flex-column'>
       <div id="map"></div>
+
+      <div className="map-overlay top">
+        <div className="map-overlay-inner">
+              {territories.map((terr, index) => (
+                <div className='swatches d-flex justify-content-around' key={index}><div className={terr}></div>{`Territory ${terr}`}</div>
+              ))}
+        </div>
+      </div>
+
       <div className='d-flex flex-row' style={{ marginTop: '17px' }}>
         {mainList && mainList.length > 0 && <div style={{ width: '50%' }}>
           <h3>Main table</h3>

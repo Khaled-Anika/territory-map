@@ -11,3 +11,44 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+
+.map-overlay {
+  font: 12px/20px 'Helvetica Neue', Arial, Helvetica, sans-serif;
+  font-weight: bold;
+  position: absolute;
+  width: 150px;
+  top: 20px;
+  left: 85px;
+  padding: 10px;
+}
+
+.map-overlay .map-overlay-inner {
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+  border-radius: 3px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.map-overlay-inner .swatches div {
+  width: 36px;
+  height: 20px;
+  border: none;
+}
+
+.map-overlay-inner .swatches {
+  height: 27px;
+}
+
+.map-overlay-inner .A {
+  background-color: #DC143C;
+}
+
+.map-overlay-inner .B {
+  background-color: #6e599f;
+}
+
+.map-overlay-inner .X {
+  background-color: #FFC300;
+}

@@ -363,7 +363,7 @@ function App() {
           'source': 'counties',
           'source-layer': 'Germany_divisions-cra33a',
           'paint': {
-            'fill-outline-color': 'rgba(0,0,0,0.1)',
+            'fill-outline-color': '#000000',
             'fill-color': 'rgba(0,0,0,0.1)'
           }
         },
@@ -378,7 +378,7 @@ function App() {
           'source': 'counties',
           'source-layer': 'Germany_divisions-cra33a',//'USA_0-dyrsfv',
           'paint': {
-            'fill-outline-color': '#484896',
+            'fill-outline-color': '#000000',
             'fill-color': '#DAF7A6',
             'fill-opacity': 0.75
           },
@@ -412,11 +412,11 @@ function App() {
           'type': 'fill',
           'source': 'counties',
           'source-layer': 'Germany_divisions-cra33a',//'USA_0-dyrsfv',
-          // 'paint': {
-          //   'fill-outline-color': '#484896',
-          //   'fill-color': '#DC143C',
-          //   'fill-opacity': 0.75
-          // },
+          'paint': {
+            'fill-outline-color': '#000000',
+            //   'fill-color': '#DC143C',
+            //   'fill-opacity': 0.75
+          },
           'filter': ['in', 'Name', '']
         },
         // Place polygons under labels, roads and buildings.
@@ -429,11 +429,11 @@ function App() {
           'type': 'fill',
           'source': 'counties',
           'source-layer': 'Germany_divisions-cra33a',//'USA_0-dyrsfv',
-          // 'paint': {
-          //   'fill-outline-color': '#484896',
-          //   'fill-color': '#6e599f',
-          //   'fill-opacity': 0.75
-          // },
+          'paint': {
+            'fill-outline-color': '#000000',
+            //   'fill-color': '#6e599f',
+            //   'fill-opacity': 0.75
+          },
           'filter': ['in', 'Name', '']
         },
         // Place polygons under labels, roads and buildings.
@@ -446,11 +446,11 @@ function App() {
           'type': 'fill',
           'source': 'counties',
           'source-layer': 'Germany_divisions-cra33a',//'USA_0-dyrsfv',
-          // 'paint': {
-          //   'fill-outline-color': '#FFC300',
-          //   'fill-color': '#FFC300',
-          //   'fill-opacity': 0.75
-          // },
+          'paint': {
+            'fill-outline-color': '#000000',
+            //   'fill-color': '#FFC300',
+            //   'fill-opacity': 0.75
+          },
           'filter': ['in', 'Name', '']
         },
         // Place polygons under labels, roads and buildings.
@@ -671,6 +671,35 @@ function App() {
     }
   }, [tempSourceFeatures]);
 
+  const updateLayerColors = (layerId, features, lastCheckedTerr, f) => {
+    map.current.removeLayer(layerId);
+    let index = features.findIndex(feature => feature.properties.Name == f.properties.Name);
+    features.splice(index, 1);
+    if (lastCheckedTerr == 'X') setXFeatures(features);
+    if (lastCheckedTerr == 'A') setAFeatures(features);
+    if (lastCheckedTerr == 'B') setBFeatures(features);
+    console.log("x features", features);
+
+
+    console.log("SETTING X LAYER");
+    map.current.addLayer(
+      {
+        'id': layerId,
+        'type': 'fill',
+        'source': 'counties',
+        'source-layer': 'Germany_divisions-cra33a',//'USA_0-dyrsfv',
+        'paint': {
+          'fill-outline-color': '#000000',
+          'fill-color': '#FFC300',
+          //   'fill-opacity': 0.75
+        },
+        'filter': ['in', 'Name', ...(features.map(f => f.properties.Name))]
+      },
+      // Place polygons under labels, roads and buildings.
+      'building'
+    );
+  };
+
   const changeTerritory = (selectedTerritory) => {
     setSelectedTerritory(selectedTerritory);
     console.log('searched codes', searchedCodesTerritory);
@@ -681,6 +710,7 @@ function App() {
     const terrBfeatures = [];
     const terrXfeatures = [];
     const terrMixedFeatures = [];
+    let lastCheckedTerr = '';
     // eslint-disable-next-line
     if (selectedFeatures && selectedFeatures.length > 0) {
       let checkedCounter = 0;
@@ -698,10 +728,12 @@ function App() {
               x.checked = true;
               matchedCodes = matchedCodes + 1;
               checkedCounter = checkedCounter + 1;
+              lastCheckedTerr = x.territory;
             }
           }
         });
         console.log("matched codes", matchedCodes);
+        console.log("X FEATURES", xFeatures);
         if (matchedCodes > 0) {
           if (matchedCodes == f.properties.Postcodes.split(",").length) {
             console.log("all codes matched from same feature");
@@ -709,7 +741,13 @@ function App() {
             if (selectedTerritory === "A") {
               terrAfeatures.push(...aFeatures, f);
               setAFeatures([...aFeatures, f]);
-              console.log("terr a features", terrAfeatures);
+
+              if (lastCheckedTerr == 'X') {
+                updateLayerColors('counties-highlighted-X', xFeatures, 'X', f);
+              }
+              if (lastCheckedTerr == 'B') {
+                updateLayerColors('counties-highlighted-B', bFeatures, 'B', f);
+              }
 
               const param1 = terrAfeatures.map((feature) => feature.properties.Name);
               map.current.setFilter('counties-highlighted-A', ['in', 'Name', ...param1]);
@@ -718,6 +756,13 @@ function App() {
             if (selectedTerritory === "B") {
               terrBfeatures.push(...bFeatures, f);
               setBFeatures([...bFeatures, f]);
+
+              if (lastCheckedTerr == 'X') {
+                updateLayerColors('counties-highlighted-X', xFeatures, 'X', f);
+              }
+              if (lastCheckedTerr == 'A') {
+                updateLayerColors('counties-highlighted-A', bFeatures, 'A', f);
+              }
 
               const param2 = terrBfeatures.map((feature) => feature.properties.Name);
               map.current.setFilter('counties-highlighted-B', ['in', 'Name', ...param2]);
@@ -884,7 +929,7 @@ function App() {
             </tbody>
           </table> */}
 
-          <Table columns={columns} data={selectedAreas} sendData={sendData}/>
+          <Table columns={columns} data={selectedAreas} sendData={sendData} />
         </div>
       </div>
     </div>

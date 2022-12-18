@@ -431,7 +431,7 @@ function App() {
           'source-layer': 'Germany_divisions-cra33a',//'USA_0-dyrsfv',
           'paint': {
             'fill-outline-color': '#000000',
-            //   'fill-color': '#6e599f',
+            //   'fill-color': '#6E599F',
             //   'fill-opacity': 0.75
           },
           'filter': ['in', 'Name', '']
@@ -652,7 +652,7 @@ function App() {
 
       const param2 = terrBfeatures.map((feature) => feature.properties.Name);
       map.current.setFilter('counties-highlighted-B', ['in', 'Name', ...param2]);
-      map.current.setPaintProperty('counties-highlighted-B', 'fill-color', '#6e599f');
+      map.current.setPaintProperty('counties-highlighted-B', 'fill-color', '#6E599F');
 
       const param3 = terrXfeatures.map((feature) => feature.properties.Name);
       map.current.setFilter('counties-highlighted-X', ['in', 'Name', ...param3]);
@@ -671,7 +671,7 @@ function App() {
     }
   }, [tempSourceFeatures]);
 
-  const updateLayerColors = (layerId, features, lastCheckedTerr, f) => {
+  const updateLayerColors = (layerId, features, lastCheckedTerr, f, color) => {
     map.current.removeLayer(layerId);
     let index = features.findIndex(feature => feature.properties.Name == f.properties.Name);
     features.splice(index, 1);
@@ -690,7 +690,7 @@ function App() {
         'source-layer': 'Germany_divisions-cra33a',//'USA_0-dyrsfv',
         'paint': {
           'fill-outline-color': '#000000',
-          'fill-color': '#FFC300',
+          'fill-color': color,
           //   'fill-opacity': 0.75
         },
         'filter': ['in', 'Name', ...(features.map(f => f.properties.Name))]
@@ -743,10 +743,10 @@ function App() {
               setAFeatures([...aFeatures, f]);
 
               if (lastCheckedTerr == 'X') {
-                updateLayerColors('counties-highlighted-X', xFeatures, 'X', f);
+                updateLayerColors('counties-highlighted-X', xFeatures, 'X', f, '#FFC300');
               }
               if (lastCheckedTerr == 'B') {
-                updateLayerColors('counties-highlighted-B', bFeatures, 'B', f);
+                updateLayerColors('counties-highlighted-B', bFeatures, 'B', f, '#6E599F');
               }
 
               const param1 = terrAfeatures.map((feature) => feature.properties.Name);
@@ -758,29 +758,46 @@ function App() {
               setBFeatures([...bFeatures, f]);
 
               if (lastCheckedTerr == 'X') {
-                updateLayerColors('counties-highlighted-X', xFeatures, 'X', f);
+                updateLayerColors('counties-highlighted-X', xFeatures, 'X', f, '#FFC300');
               }
               if (lastCheckedTerr == 'A') {
-                updateLayerColors('counties-highlighted-A', bFeatures, 'A', f);
+                updateLayerColors('counties-highlighted-A', aFeatures, 'A', f, '#DC143C');
               }
 
               const param2 = terrBfeatures.map((feature) => feature.properties.Name);
               map.current.setFilter('counties-highlighted-B', ['in', 'Name', ...param2]);
-              map.current.setPaintProperty('counties-highlighted-B', 'fill-color', '#6e599f');
+              map.current.setPaintProperty('counties-highlighted-B', 'fill-color', '#6E599F');
             }
             if (selectedTerritory === "X") {
               terrXfeatures.push(...xFeatures, f);
               setXFeatures([...xFeatures, f]);
               console.log("terr x features after change", terrXfeatures);
 
+              // if (lastCheckedTerr == 'B') {
+              //   updateLayerColors('counties-highlighted-B', bFeatures, 'B', f, '#6E599F');
+              // }
+              // if (lastCheckedTerr == 'A') {
+              //   updateLayerColors('counties-highlighted-A', aFeatures, 'A', f, '#DC143C');
+              // }
               const param3 = terrXfeatures.map((feature) => feature.properties.Name);
               map.current.setFilter('counties-highlighted-X', ['in', 'Name', ...param3]);
               map.current.setPaintProperty('counties-highlighted-X', 'fill-color', '#FFC300');
             }
+
           } else {
             console.log("all codes DID NOT match from same feature");
             terrMixedFeatures.push(...mixedFeatures, f);
             setMixedFeatures([...mixedFeatures, f]);
+
+            // if (lastCheckedTerr == 'X') {
+            //   updateLayerColors('counties-highlighted-X', xFeatures, 'X', f, '#FFC300');
+            // }
+            // if (lastCheckedTerr == 'B') {
+            //   updateLayerColors('counties-highlighted-B', bFeatures, 'B', f, '#6E599F');
+            // }
+            // if (lastCheckedTerr == 'A') {
+            //   updateLayerColors('counties-highlighted-A', aFeatures, 'A', f, '#DC143C');
+            // }
 
             const param4 = terrMixedFeatures.map((feature) => feature.properties.Name);
             map.current.setFilter('counties-highlighted-Mixed', ['in', 'Name', ...param4]);
@@ -861,9 +878,9 @@ function App() {
 
       <div className="map-overlay top">
         <div className="map-overlay-inner">
-              {territories.map((terr, index) => (
-                <div className='swatches d-flex justify-content-around' key={index}><div className={terr}></div>{`Territory ${terr}`}</div>
-              ))}
+          {territories.map((terr, index) => (
+            <div className='swatches d-flex justify-content-around' key={index}><div className={terr}></div>{`Territory ${terr}`}</div>
+          ))}
         </div>
       </div>
 

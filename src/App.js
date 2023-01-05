@@ -379,27 +379,10 @@ function App() {
           'source-layer': 'Germany_divisions-cra33a',//'USA_0-dyrsfv',
           'paint': {
             'fill-outline-color': '#000000',
-            'fill-color': '#DAF7A6',
-            'fill-opacity': 0.75
+            // 'fill-color': '#FAA0A0',
+            'fill-opacity': 1.00
           },
           'filter': ['in', 'Name', '']
-        },
-        // Place polygons under labels, roads and buildings.
-        'building'
-      );
-
-      map.current.addLayer(
-        {
-          'id': 'counties-highlighted-2',
-          'type': 'fill',
-          'source': 'counties',
-          'source-layer': 'Germany_divisions-cra33a',//'USA_0-dyrsfv',
-          'paint': {
-            'fill-outline-color': '#484896',
-            'fill-color': '#DC143C',
-            'fill-opacity': 0.75
-          },
-          'filter': ['in', 'Description', '']
         },
         // Place polygons under labels, roads and buildings.
         'building'
@@ -415,7 +398,7 @@ function App() {
           'paint': {
             'fill-outline-color': '#000000',
             //   'fill-color': '#DC143C',
-            //   'fill-opacity': 0.75
+            'fill-opacity': 0.75
           },
           'filter': ['in', 'Name', '']
         },
@@ -432,7 +415,7 @@ function App() {
           'paint': {
             'fill-outline-color': '#000000',
             //   'fill-color': '#6E599F',
-            //   'fill-opacity': 0.75
+            'fill-opacity': 0.75
           },
           'filter': ['in', 'Name', '']
         },
@@ -449,7 +432,7 @@ function App() {
           'paint': {
             'fill-outline-color': '#000000',
             //   'fill-color': '#FFC300',
-            //   'fill-opacity': 0.75
+            'fill-opacity': 0.75
           },
           'filter': ['in', 'Name', '']
         },
@@ -463,11 +446,11 @@ function App() {
           'type': 'fill',
           'source': 'counties',
           'source-layer': 'Germany_divisions-cra33a',//'USA_0-dyrsfv',
-          // 'paint': {
-          //   'fill-outline-color': '#5f5f5f',
-          //   'fill-color': '#5f5f5f',
-          //   'fill-opacity': 0.75
-          // },
+          'paint': {
+            //   'fill-outline-color': '#5f5f5f',
+            //   'fill-color': '#5f5f5f',
+            'fill-opacity': 0.75
+          },
           'filter': ['in', 'Name', '']
         },
         // Place polygons under labels, roads and buildings.
@@ -691,7 +674,7 @@ function App() {
         'paint': {
           'fill-outline-color': '#000000',
           'fill-color': color,
-          //   'fill-opacity': 0.75
+          'fill-opacity': 0.75
         },
         'filter': ['in', 'Name', ...(features.map(f => f.properties.Name))]
       },
@@ -733,7 +716,6 @@ function App() {
           }
         });
         console.log("matched codes", matchedCodes);
-        console.log("X FEATURES", xFeatures);
         if (matchedCodes > 0) {
           if (matchedCodes == f.properties.Postcodes.split(",").length) {
             console.log("all codes matched from same feature");
@@ -752,6 +734,7 @@ function App() {
               const param1 = terrAfeatures.map((feature) => feature.properties.Name);
               map.current.setFilter('counties-highlighted-A', ['in', 'Name', ...param1]);
               map.current.setPaintProperty('counties-highlighted-A', 'fill-color', '#DC143C');
+              map.current.setPaintProperty('counties-highlighted-A', 'fill-opacity', 0.75);
             }
             if (selectedTerritory === "B") {
               terrBfeatures.push(...bFeatures, f);
@@ -767,6 +750,7 @@ function App() {
               const param2 = terrBfeatures.map((feature) => feature.properties.Name);
               map.current.setFilter('counties-highlighted-B', ['in', 'Name', ...param2]);
               map.current.setPaintProperty('counties-highlighted-B', 'fill-color', '#6E599F');
+              map.current.setPaintProperty('counties-highlighted-B', 'fill-opacity', 0.75);
             }
             if (selectedTerritory === "X") {
               terrXfeatures.push(...xFeatures, f);
@@ -782,6 +766,7 @@ function App() {
               const param3 = terrXfeatures.map((feature) => feature.properties.Name);
               map.current.setFilter('counties-highlighted-X', ['in', 'Name', ...param3]);
               map.current.setPaintProperty('counties-highlighted-X', 'fill-color', '#FFC300');
+              map.current.setPaintProperty('counties-highlighted-X', 'fill-opacity', 0.75);
             }
 
           } else {
@@ -802,6 +787,7 @@ function App() {
             const param4 = terrMixedFeatures.map((feature) => feature.properties.Name);
             map.current.setFilter('counties-highlighted-Mixed', ['in', 'Name', ...param4]);
             map.current.setPaintProperty('counties-highlighted-Mixed', 'fill-color', '#5F5F5F');
+            map.current.setPaintProperty('counties-highlighted-Mixed', 'fill-opacity', 0.75);
           }
         }
       };

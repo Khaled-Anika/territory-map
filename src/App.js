@@ -68,6 +68,10 @@ function App() {
           {
             Header: "Territory",
             accessor: "territory"
+          },
+          {
+            Header: "Name",
+            accessor: "Name"
           }
         ]
       }
@@ -278,7 +282,8 @@ function App() {
   const gridRef = useRef();
   const [columnDefs, setColumnDefs] = useState([
     { field: 'postCode', filter: 'agTextColumnFilter' },
-    { field: 'territory', filter: 'agTextColumnFilter' }
+    { field: 'territory', filter: 'agTextColumnFilter' },
+    { field: 'Name', filter: 'agTextColumnFilter' }
   ]);
   const defaultColDef = useMemo(() => ({
     // floatingFilter: true,
@@ -320,6 +325,8 @@ function App() {
             tempAreas.push({
               postCode: y,
               territory: x.territory,
+              Name: x.Name
+
             });
             x.checked = true;
           }
@@ -841,7 +848,8 @@ function App() {
             console.log("s checked", count, j);
             tempAreas.push({
               postCode: tempCT2[j].postCode,
-              territory: selectedTerritory
+              territory: selectedTerritory,
+              Name: cloneCT[i].Name
             });
             break;
           }

@@ -115,163 +115,163 @@ function App() {
       postCode: "03043"
     }, {
       territory: "B",
-      Name: "Hessen",
+      Name: "Hessen1",
       postCode: "03044"
     }, {
       territory: "A",
-      Name: "Hessen",
+      Name: "Hessen2",
       postCode: "06108"
     }, {
       territory: "A",
-      Name: "Hessen",
+      Name: "Hessen3",
       postCode: "06109"
     }, {
       territory: "A",
-      Name: "Hessen",
+      Name: "Hessen4",
       postCode: "06110"
     }, {
       territory: "A",
-      Name: "Hessen",
+      Name: "Hessen5",
       postCode: "07318"
     }, {
       territory: "A",
-      Name: "Hessen",
+      Name: "Hessen6",
       postCode: "07319"
     }, {
       territory: "A",
-      Name: "Hessen",
+      Name: "Hessen7",
       postCode: "07320"
     }, {
       territory: "B",
-      Name: "Hessen",
+      Name: "Hessen8",
       postCode: "10115"
     }, {
       territory: "B",
-      Name: "Hessen",
+      Name: "Hessen9",
       postCode: "10116"
     }, {
       territory: "B",
-      Name: "Hessen",
+      Name: "Hessen10",
       postCode: "10117"
     }, {
       territory: "B",
-      Name: "Hessen",
+      Name: "Hessen11",
       postCode: "17033"
     }, {
       territory: "B",
-      Name: "Hessen",
+      Name: "Hessen12",
       postCode: "17034"
     }, {
       territory: "B",
-      Name: "Hessen",
+      Name: "Hessen13",
       postCode: "17035"
     }, {
       territory: "B",
-      Name: "Hessen",
+      Name: "Hessen14",
       postCode: "20038"
     }, {
       territory: "B",
-      Name: "Hessen",
+      Name: "Hessen15",
       postCode: "20039"
     }, {
       territory: "B",
-      Name: "Hessen",
+      Name: "Hessen16",
       postCode: "20040"
     }, {
       territory: "A",
-      Name: "Hessen",
+      Name: "Hessen17",
       postCode: "21217"
     }, {
       territory: "A",
-      Name: "Hessen",
+      Name: "Hessen18",
       postCode: "21218"
     }, {
       territory: "A",
-      Name: "Hessen",
+      Name: "Hessen19",
       postCode: "21219"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen20",
       postCode: "22844"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen40",
       postCode: "22845"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen21",
       postCode: "22846"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen22",
       postCode: "27568"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen23",
       postCode: "27569"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen24",
       postCode: "27570"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen25",
       postCode: "34117"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen26",
       postCode: "34118"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen27",
       postCode: "34119"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen28",
       postCode: "54290"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen29",
       postCode: "54291"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen30",
       postCode: "54292"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen31",
       postCode: "66041"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen32",
       postCode: "66042"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen33",
       postCode: "66043"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen34",
       postCode: "68131"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen35",
       postCode: "68132"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen36",
       postCode: "68133"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen37",
       postCode: "97909"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen38",
       postCode: "97910"
     }, {
       territory: "X",
-      Name: "Hessen",
+      Name: "Hessen39",
       postCode: "97911"
     }
   ];
@@ -690,13 +690,16 @@ function App() {
   }, [tempSourceFeatures]);
 
   const updateLayerColors = (layerId, features, lastCheckedTerr, f, color) => {
+    console.log('layer id to be removed', layerId);
+    console.log("before slice features", features);
     map.current.removeLayer(layerId);
     let index = features.findIndex(feature => feature.properties.Name == f.properties.Name);
+    console.log("index to be removed", index);
     features.splice(index, 1);
     if (lastCheckedTerr == 'X') setXFeatures(features);
     if (lastCheckedTerr == 'A') setAFeatures(features);
     if (lastCheckedTerr == 'B') setBFeatures(features);
-    console.log("x features", features);
+    console.log("after slice features", features);
 
 
     console.log("SETTING X LAYER");
@@ -724,10 +727,10 @@ function App() {
     const tempCT0 = searchedCodesTerritory.map(u => Object.assign({}, u));
     console.log('selected features', selectedFeatures);
 
-    const terrAfeatures = [];
-    const terrBfeatures = [];
-    const terrXfeatures = [];
-    const terrMixedFeatures = [];
+    const terrAfeatures = aFeatures;
+    const terrBfeatures = bFeatures;
+    const terrXfeatures = xFeatures;
+    const terrMixedFeatures = mixedFeatures;
     let lastCheckedTerr = '';
     // eslint-disable-next-line
     if (selectedFeatures && selectedFeatures.length > 0) {
@@ -750,14 +753,15 @@ function App() {
             }
           }
         });
+        console.log("last checked territory", lastCheckedTerr);
         console.log("matched codes", matchedCodes);
         if (matchedCodes > 0) {
           if (matchedCodes == f.properties.Postcodes.split(",").length) {
             console.log("all codes matched from same feature");
             console.log("selected territory", selectedTerritory);
             if (selectedTerritory === "A") {
-              terrAfeatures.push(...aFeatures, f);
-              setAFeatures([...aFeatures, f]);
+              terrAfeatures.push(f);
+              setAFeatures(terrAfeatures);
 
               if (lastCheckedTerr == 'X') {
                 updateLayerColors('counties-highlighted-X', xFeatures, 'X', f, '#FFC300');
@@ -772,8 +776,8 @@ function App() {
               map.current.setPaintProperty('counties-highlighted-A', 'fill-opacity', 0.75);
             }
             if (selectedTerritory === "B") {
-              terrBfeatures.push(...bFeatures, f);
-              setBFeatures([...bFeatures, f]);
+              terrBfeatures.push(f);
+              setBFeatures(terrBfeatures);
 
               if (lastCheckedTerr == 'X') {
                 updateLayerColors('counties-highlighted-X', xFeatures, 'X', f, '#FFC300');
@@ -788,16 +792,17 @@ function App() {
               map.current.setPaintProperty('counties-highlighted-B', 'fill-opacity', 0.75);
             }
             if (selectedTerritory === "X") {
-              terrXfeatures.push(...xFeatures, f);
-              setXFeatures([...xFeatures, f]);
+              terrXfeatures.push(f);
+              setXFeatures(terrXfeatures);
               console.log("terr x features after change", terrXfeatures);
 
-              // if (lastCheckedTerr == 'B') {
-              //   updateLayerColors('counties-highlighted-B', bFeatures, 'B', f, '#6E599F');
-              // }
-              // if (lastCheckedTerr == 'A') {
-              //   updateLayerColors('counties-highlighted-A', aFeatures, 'A', f, '#DC143C');
-              // }
+              if (lastCheckedTerr == 'B') {
+                updateLayerColors('counties-highlighted-B', bFeatures, 'B', f, '#6E599F');
+              }
+              if (lastCheckedTerr == 'A') {
+                updateLayerColors('counties-highlighted-A', aFeatures, 'A', f, '#DC143C');
+              }
+
               const param3 = terrXfeatures.map((feature) => feature.properties.Name);
               map.current.setFilter('counties-highlighted-X', ['in', 'Name', ...param3]);
               map.current.setPaintProperty('counties-highlighted-X', 'fill-color', '#FFC300');
@@ -806,8 +811,8 @@ function App() {
 
           } else {
             console.log("all codes DID NOT match from same feature");
-            terrMixedFeatures.push(...mixedFeatures, f);
-            setMixedFeatures([...mixedFeatures, f]);
+            terrMixedFeatures.push(f);
+            setMixedFeatures(terrMixedFeatures);
 
             // if (lastCheckedTerr == 'X') {
             //   updateLayerColors('counties-highlighted-X', xFeatures, 'X', f, '#FFC300');

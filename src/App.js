@@ -1,8 +1,13 @@
 import './App.css';
 import mapboxgl from '!mapbox-gl'; // eslint-disable-line import/no-webpack-loader-syntax
-import { useEffect, useRef, useState, useMemo } from 'react';
+import { useEffect, useRef, useState, useMemo, useCallback } from 'react';
 import List from "list.js";
 import Table from "./Table";
+
+import { AgGridReact } from 'ag-grid-react';
+import 'ag-grid-community/dist/styles/ag-grid.css';
+import 'ag-grid-community/dist/styles/ag-theme-alpine.css';
+
 
 import {
   Dropdown,
@@ -49,7 +54,6 @@ function App() {
   const [selectedTerr, setSelectedTerritory] = useState('');
   const [menu, setMenu] = useState(false);
 
-  var tempCT = [];
   const columns = useMemo(
     () => [
       {
@@ -270,6 +274,30 @@ function App() {
 
   const territories = ["A", "B", "X"];
 
+  //for ag-grid//
+  const gridRef = useRef();
+  const [columnDefs, setColumnDefs] = useState([
+    { field: 'postCode', filter: 'agTextColumnFilter' },
+    { field: 'territory', filter: 'agTextColumnFilter' }
+  ]);
+  const defaultColDef = useMemo(() => ({
+    // floatingFilter: true,
+    flex: 1,
+    // filterParams: {
+    //   buttons: ['apply','clear']
+    // }
+  }), []);
+
+  const onFilterChanged = () => {
+    console.log("updated rows in ag-grid", gridRef.current.api.getModel());
+    var tmpFilteredrows = gridRef.current.api.getModel().rowsToDisplay;
+    console.log("serached data", tmpFilteredrows.map(row => row.data));
+    setSearchedCodesTerritory(tmpFilteredrows.map(row => row.data));
+  }
+
+  //for ag-grid//
+
+
   useEffect(() => {
     console.log("set main list called");
     setMainList(codesTerritory);
@@ -291,7 +319,7 @@ function App() {
           if (y) {
             tempAreas.push({
               postCode: y,
-              territory: x.territory
+              territory: x.territory,
             });
             x.checked = true;
           }
@@ -917,31 +945,15 @@ function App() {
             </Dropdown>
           </div>
 
-          {/* <table id='interaction-table' className='table'>
-            <thead>
-              <tr>
-                <th className='sortable' scope="col">Post Code</th>
-                <th scope="col">Territory Name</th>
-                <th>#Codes</th>
-              </tr>
-            </thead>
-            <tbody className="list">
-              {selectedAreas.map((loc, index) => (
-                <tr key={index}>
-                  <td className='postCode'>{loc.postCode}</td>
-                  <td className='territory'>{loc.territory}</td>
-                  <td>{selectedAreas.length}</td>
-                </tr>
-              ))}
-              <tr>
-                {!selectedAreas || selectedAreas.length <= 0 && (
-                  <td colSpan={2}>No areas selected yet.</td>
-                )}
-              </tr>
-            </tbody>
-          </table> */}
+          {/* <Table columns={columns} data={selectedAreas} sendData={sendData} /> */}
 
-          <Table columns={columns} data={selectedAreas} sendData={sendData} />
+          <div className="ag-theme-alpine" style={{ height: '100%' }}>
+            <AgGridReact ref={gridRef}
+              rowData={selectedAreas} animateRows={true}
+              columnDefs={columnDefs} defaultColDef={defaultColDef}
+              onFilterChanged={onFilterChanged}
+            />
+          </div>
         </div>
       </div>
     </div>

@@ -286,8 +286,9 @@ function App() {
     { field: 'Name', filter: 'agTextColumnFilter' }
   ]);
   const defaultColDef = useMemo(() => ({
-    // floatingFilter: true,
+    floatingFilter: true,
     flex: 1,
+    // filter: true,
     // filterParams: {
     //   buttons: ['apply','clear']
     // }
@@ -297,7 +298,8 @@ function App() {
     console.log("updated rows in ag-grid", gridRef.current.api.getModel());
     var tmpFilteredrows = gridRef.current.api.getModel().rowsToDisplay;
     console.log("serached data", tmpFilteredrows.map(row => row.data));
-    setSearchedCodesTerritory(tmpFilteredrows.map(row => row.data));
+    var rowsToDisplay = tmpFilteredrows.map(row => row.data);
+    setSearchedCodesTerritory(rowsToDisplay);
   }
 
   //for ag-grid//
@@ -690,17 +692,12 @@ function App() {
   }, [tempSourceFeatures]);
 
   const updateLayerColors = (layerId, features, lastCheckedTerr, f, color) => {
-    console.log('layer id to be removed', layerId);
-    console.log("before slice features", features);
     map.current.removeLayer(layerId);
     let index = features.findIndex(feature => feature.properties.Name == f.properties.Name);
-    console.log("index to be removed", index);
     features.splice(index, 1);
     if (lastCheckedTerr == 'X') setXFeatures(features);
     if (lastCheckedTerr == 'A') setAFeatures(features);
     if (lastCheckedTerr == 'B') setBFeatures(features);
-    console.log("after slice features", features);
-
 
     console.log("SETTING X LAYER");
     map.current.addLayer(
@@ -736,7 +733,9 @@ function App() {
     if (selectedFeatures && selectedFeatures.length > 0) {
       let checkedCounter = 0;
       for (let k = 0; k < selectedFeatures.length; k++) {
-        if (checkedCounter == tempCT0.length) { return; }
+        if (checkedCounter == tempCT0.length) {
+          break;
+        }
         let f = selectedFeatures[k];
         let matchedCodes = 0;
         // eslint-disable-next-line

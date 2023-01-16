@@ -728,11 +728,11 @@ function App() {
     const terrBfeatures = bFeatures;
     const terrXfeatures = xFeatures;
     const terrMixedFeatures = mixedFeatures;
-    let lastCheckedTerr = '';
     // eslint-disable-next-line
     if (selectedFeatures && selectedFeatures.length > 0) {
       let checkedCounter = 0;
       for (let k = 0; k < selectedFeatures.length; k++) {
+        let lastCheckedTerr = '';
         if (checkedCounter == tempCT0.length) {
           break;
         }
@@ -748,7 +748,8 @@ function App() {
               x.checked = true;
               matchedCodes = matchedCodes + 1;
               checkedCounter = checkedCounter + 1;
-              lastCheckedTerr = x.territory;
+              lastCheckedTerr = (lastCheckedTerr != '' && lastCheckedTerr !== x.territory) ? 'Mixed' : x.territory;
+              // lastCheckedTerr = x.territory;
             }
           }
         });
@@ -768,6 +769,9 @@ function App() {
               if (lastCheckedTerr == 'B') {
                 updateLayerColors('counties-highlighted-B', bFeatures, 'B', f, '#6E599F');
               }
+              if (lastCheckedTerr == 'Mixed') {
+                updateLayerColors('counties-highlighted-Mixed', mixedFeatures, 'Mixed', f, '#6E599F');
+              }
 
               const param1 = terrAfeatures.map((feature) => feature.properties.Name);
               map.current.setFilter('counties-highlighted-A', ['in', 'Name', ...param1]);
@@ -783,6 +787,9 @@ function App() {
               }
               if (lastCheckedTerr == 'A') {
                 updateLayerColors('counties-highlighted-A', aFeatures, 'A', f, '#DC143C');
+              }
+              if (lastCheckedTerr == 'Mixed') {
+                updateLayerColors('counties-highlighted-Mixed', mixedFeatures, 'Mixed', f, '#6E599F');
               }
 
               const param2 = terrBfeatures.map((feature) => feature.properties.Name);
@@ -801,6 +808,9 @@ function App() {
               if (lastCheckedTerr == 'A') {
                 updateLayerColors('counties-highlighted-A', aFeatures, 'A', f, '#DC143C');
               }
+              if (lastCheckedTerr == 'Mixed') {
+                updateLayerColors('counties-highlighted-Mixed', mixedFeatures, 'Mixed', f, '#6E599F');
+              }
 
               const param3 = terrXfeatures.map((feature) => feature.properties.Name);
               map.current.setFilter('counties-highlighted-X', ['in', 'Name', ...param3]);
@@ -813,15 +823,15 @@ function App() {
             terrMixedFeatures.push(f);
             setMixedFeatures(terrMixedFeatures);
 
-            // if (lastCheckedTerr == 'X') {
-            //   updateLayerColors('counties-highlighted-X', xFeatures, 'X', f, '#FFC300');
-            // }
-            // if (lastCheckedTerr == 'B') {
-            //   updateLayerColors('counties-highlighted-B', bFeatures, 'B', f, '#6E599F');
-            // }
-            // if (lastCheckedTerr == 'A') {
-            //   updateLayerColors('counties-highlighted-A', aFeatures, 'A', f, '#DC143C');
-            // }
+            if (lastCheckedTerr == 'X') {
+              updateLayerColors('counties-highlighted-X', xFeatures, 'X', f, '#FFC300');
+            }
+            if (lastCheckedTerr == 'B') {
+              updateLayerColors('counties-highlighted-B', bFeatures, 'B', f, '#6E599F');
+            }
+            if (lastCheckedTerr == 'A') {
+              updateLayerColors('counties-highlighted-A', aFeatures, 'A', f, '#DC143C');
+            }
 
             const param4 = terrMixedFeatures.map((feature) => feature.properties.Name);
             map.current.setFilter('counties-highlighted-Mixed', ['in', 'Name', ...param4]);

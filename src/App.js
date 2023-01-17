@@ -295,7 +295,6 @@ function App() {
   }), []);
 
   const onFilterChanged = () => {
-    console.log("updated rows in ag-grid", gridRef.current.api.getModel());
     var tmpFilteredrows = gridRef.current.api.getModel().rowsToDisplay;
     console.log("serached data", tmpFilteredrows.map(row => row.data));
     var rowsToDisplay = tmpFilteredrows.map(row => row.data);
@@ -578,7 +577,7 @@ function App() {
           if (features.length >= 1000) {
             return window.alert('Select a smaller number of features');
           }
-          console.log("features", features);
+          console.log("Selcted features", features);
           setSelectedFeatures(features);
 
           // Run through the selected features and set a filter
@@ -588,17 +587,6 @@ function App() {
           //highlighting areas
           const param1 = features.map((feature) => feature.properties.Name);
           map.current.setFilter('counties-highlighted', ['in', 'Name', ...param1]);
-
-          //generating table
-          // if (document.getElementById("search").value !== "") {
-          //   console.log("search not empty", codes.size());
-          //   // codes.search("", "postCode");
-          //   codes.reIndex();
-          // }
-
-          // document.getElementById("search").value = "";
-
-          // prepareVisualizationTable(features);
         }
 
         map.current.dragPan.enable();
@@ -685,7 +673,7 @@ function App() {
   }, [sourceFeatures]);
 
   useEffect(() => {
-    if (sourceFeatures.length !== tempSourceFeatures.length) { //!equalsCheck(sourceFeatures, tempSourceFeatures)
+    if (sourceFeatures.length !== tempSourceFeatures.length) {
       console.log("source & temp not equal");
       setSourceFeatures(tempSourceFeatures);
     }
@@ -800,7 +788,6 @@ function App() {
             if (selectedTerritory === "X") {
               terrXfeatures.push(f);
               setXFeatures(terrXfeatures);
-              console.log("terr x features after change", terrXfeatures);
 
               if (lastCheckedTerr == 'B') {
                 updateLayerColors('counties-highlighted-B', bFeatures, 'B', f, '#6E599F');
@@ -848,10 +835,8 @@ function App() {
       for (let i = 0; i < cloneCT.length; i++) {
         if (count == tempCT2.length) {
           console.log("count equals length");
-          // console.log("temp areas after territory change", tempAreas);
           setSelectedAreas(tempAreas);
           setMainList(cloneCT);
-          // document.getElementById("search").value = "";
           return;
         }
         for (let j = 0; j < tempCT2.length; j++) {
@@ -869,42 +854,12 @@ function App() {
           }
         };
       };
-      // console.log("temp areas after territory change", tempAreas);
       setSelectedAreas(tempAreas);
       setMainList(cloneCT);
-      // document.getElementById("search").value = "";
     }
   }
-
-  const equalsCheck = (a, b) => {
-    // If they point to the same instance of the array
-    if (a === b)
-      return true;
-
-    // If they point to the same instance of date
-    if (a instanceof Date && b instanceof Date)
-      return a.getTime() === b.getTime();
-
-    // If both of them are not null and their type is not an object
-    if (!a || !b || (typeof a !== 'object' && typeof b !== 'object'))
-      return a === b;
-
-    // This means the elements are objects
-    // If they are not the same type of objects
-    if (a.prototype !== b.prototype)
-      return false;
-
-    // Check if both of the objects have the same number of keys
-    const keys = Object.keys(a);
-    if (keys.length !== Object.keys(b).length)
-      return false;
-
-    // Check recursively for every key in both
-    return keys.every(k => equalsCheck(a[k], b[k]));
-  };
-
+  
   const sendData = (data) => {
-    console.log("searched data from react table", data);
     setSearchedCodesTerritory(data);
   }
 
